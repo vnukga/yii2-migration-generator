@@ -1,0 +1,21 @@
+{
+    "name": "vnukga/yii2-migration-generator",
+    "description": "Allows to generate migrations from scheme inexternal sources, such as Google Spreadsheets, using console.",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","migration","google"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Korablev Denis",
+            "email": "denisskinrasskaz@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "vnukga\\migrationGenerator\\": ""
+        }
+    }
+}
