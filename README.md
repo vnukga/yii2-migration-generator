@@ -25,7 +25,11 @@ to the require section of your `composer.json` file.
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
+Once the extension is installed, add the following code to "controllerMap" section in 'console/config/main.php'  :
 
-```php
-<?= \vnukga\migrationGenerator\AutoloadExample::widget(); ?>```
+```'migrate-generator' => [
+            'class' => 'vnukga\migrationGenerator\MigrateController',
+            'sourceClass' => 'vnukga\migrationGenerator\sources\GoogleSheet',
+            'sourceId' => 'Your Google-Sheet ID'
+        ]
+```
