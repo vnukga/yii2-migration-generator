@@ -27,7 +27,8 @@ Usage
 
 Once the extension is installed, add the following code to "controllerMap" section in 'console/config/main.php'  :
 
-```'migrate-generator' => [
+```
+'migrate-generator' => [
             'class' => 'vnukga\migrationGenerator\MigrateController',
             'sourceClass' => 'vnukga\migrationGenerator\sources\GoogleSheet',
             'sourceId' => 'Your Google-Sheet ID'
