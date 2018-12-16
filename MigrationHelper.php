@@ -22,6 +22,11 @@ class MigrationHelper
                     break;
                 case 'new_columns': $this->createNewColumnsMigratios($diff);
                     break;
+                case 'old_tables': $this->createDropTablesMigrations($diff);
+                    break;
+                case 'old_columns': $this->createDropColumnsMigratios($diff);
+                    break;
+
             }
         }
     }
@@ -35,10 +40,7 @@ class MigrationHelper
                 fwrite($consoleHandle,'Y');
                 pclose($consoleHandle);
                 sleep(1);
-
             }
-
-
         }
     }
 
@@ -49,6 +51,33 @@ class MigrationHelper
             $fieldsArray = $item;
             $fields = $this->getFieldsAsString($fieldsArray);
             $command = 'Yii migrate/create create_'.$tableName.'_table '.$fields;
+            $consoleHandle = popen($command,'w');
+            fwrite($consoleHandle,'Y');
+            pclose($consoleHandle);
+            sleep(1);
+        }
+    }
+
+    private function createDropColumnsMigratios($tables){
+        foreach ($tables as $tableName => $columns) {
+            foreach ($columns as $columnName => $params) {
+                $fields = '--fields='.$columnName.$this->getFieldParamsAsString($params);
+                $command = 'Yii migrate/create drop_'.$columnName.'_column_from_'.$tableName.'_table '.$fields;
+                $consoleHandle = popen($command,'w');
+                fwrite($consoleHandle,'Y');
+                pclose($consoleHandle);
+                sleep(1);
+            }
+        }
+    }
+
+    private function createDropTablesMigrations($tables){
+        foreach ($tables as $key => $item)
+        {
+            $tableName = $key;
+            $fieldsArray = $item;
+            $fields = $this->getFieldsAsString($fieldsArray);
+            $command = 'Yii migrate/create drop_'.$tableName.'_table '.$fields;
             $consoleHandle = popen($command,'w');
             fwrite($consoleHandle,'Y');
             pclose($consoleHandle);
@@ -84,7 +113,8 @@ class MigrationHelper
                 {
                     case 'type': $paramsString .= ':'.$param;
                         break;
-//                            case 'comment': $fields .= ":comment('$param')"; TODO разобраться с комментариями
+//                            case 'comment': $fields .= ":comment('$param')";
+// TODO разобраться с комментариями
 //                                break;
                     case 'required': $paramsString .= ':notNull';
                         break;

@@ -13,7 +13,7 @@ use yii\web\Response;
 use yii\helpers\VarDumper;
 use Yii;
 
-class JsonMigrateController extends Controller
+class MigrateController extends Controller
 {
 
     public $sourceClass;
@@ -61,21 +61,28 @@ class JsonMigrateController extends Controller
 
     private function getDiffArray($currentSchema,$newSchema){
         $difference = [];
-        foreach($newSchema as $tableName => $columns)
-        {
-            if($currentSchema[$tableName]) {
-                foreach ($columns as $columnName => $column) {
-                    if($currentSchema[$tableName][$columnName]){
-//                        TODO сделать проверку параметров столбца
-                    } else {
-                        $difference['new_columns'][$tableName][$columnName] = $column;
-                    }
-                }
-            } else {
-                $difference['new_tables'][$tableName] = $columns;
-            }
-        }
+        $this->getDiffs($newSchema,$currentSchema,'new_columns','new_tables',$difference);
+        $this->getDiffs($currentSchema,$newSchema,'old_columns','old_tables',$difference);
         krsort($difference);
         return $difference;
     }
+
+    private function getDiffs($array1,$array2,$columnField,$tableField,&$difference){
+        foreach($array1 as $tableName => $columns)
+        {
+            if($array2[$tableName]) {
+                foreach ($columns as $columnName => $column) {
+                    if($array2[$tableName][$columnName]){
+//                        TODO сделать проверку параметров столбца
+                    } else {
+                        $difference[$columnField][$tableName][$columnName] = $column;
+                    }
+                }
+            } else {
+                $difference[$tableField][$tableName] = $columns;
+            }
+        }
+    }
+
+
 }
