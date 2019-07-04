@@ -6,14 +6,14 @@
  * Time: 23:05
  */
 
-namespace vnukga\migrationGenerator;
+namespace vnukga\migrationGenerator\helpers;
 
 /**
  * Class MigrationHelper
- * @package console\modules\jsonMigrations
+ * @package vnukga\jsonMigrations
  */
 
-class MigrationHelper
+class MigrationHelper extends BaseHelper
 {
     public function createMigrationsFromArray($diffs){
         foreach ($diffs as $type => $diff){
@@ -31,15 +31,18 @@ class MigrationHelper
         }
     }
 
+    public function acceptMigrations()
+    {
+        $command = 'yii migrate';
+        $this->applyConsoleCommand($command);
+    }
+
     private function createNewColumnsMigratios($tables){
         foreach ($tables as $tableName => $columns) {
             foreach ($columns as $columnName => $params) {
                 $fields = '--fields='.$columnName.$this->getFieldParamsAsString($params);
                 $command = 'Yii migrate/create add_'.$columnName.'_column_to_'.$tableName.'_table '.$fields;
-                $consoleHandle = popen($command,'w');
-                fwrite($consoleHandle,'Y');
-                pclose($consoleHandle);
-                sleep(1);
+                $this->applyConsoleCommand($command);
             }
         }
     }
@@ -51,10 +54,7 @@ class MigrationHelper
             $fieldsArray = $item;
             $fields = $this->getFieldsAsString($fieldsArray);
             $command = 'Yii migrate/create create_'.$tableName.'_table '.$fields;
-            $consoleHandle = popen($command,'w');
-            fwrite($consoleHandle,'Y');
-            pclose($consoleHandle);
-            sleep(1);
+            $this->applyConsoleCommand($command);
         }
     }
 
@@ -63,10 +63,7 @@ class MigrationHelper
             foreach ($columns as $columnName => $params) {
                 $fields = '--fields='.$columnName.$this->getFieldParamsAsString($params);
                 $command = 'Yii migrate/create drop_'.$columnName.'_column_from_'.$tableName.'_table '.$fields;
-                $consoleHandle = popen($command,'w');
-                fwrite($consoleHandle,'Y');
-                pclose($consoleHandle);
-                sleep(1);
+                $this->applyConsoleCommand($command);
             }
         }
     }
@@ -78,10 +75,7 @@ class MigrationHelper
             $fieldsArray = $item;
             $fields = $this->getFieldsAsString($fieldsArray);
             $command = 'Yii migrate/create drop_'.$tableName.'_table '.$fields;
-            $consoleHandle = popen($command,'w');
-            fwrite($consoleHandle,'Y');
-            pclose($consoleHandle);
-            sleep(1);
+            $this->applyConsoleCommand($command);
         }
     }
 
@@ -113,9 +107,6 @@ class MigrationHelper
                 {
                     case 'type': $paramsString .= ':'.$param;
                         break;
-//                            case 'comment': $fields .= ":comment('$param')";
-// TODO разобраться с комментариями
-//                                break;
                     case 'required': $paramsString .= ':notNull';
                         break;
                     case 'defaultValue': $paramsString .= ":defaultValue('$param')";
