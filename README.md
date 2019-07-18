@@ -30,7 +30,7 @@ Once the extension is installed, add the following code to "controllerMap" secti
 ```
 'migrate-generator' => [
             'class' => 'vnukga\migrationGenerator\MigrateController',
-            'sourceClass' => 'vnukga\migrationGenerator\sources\GoogleSheet',
+            'sourceClass' => 'vnukga\migrationGenerator\sources\google\GoogleApiSheet',
             'sourceId' => 'Your Google-Sheet ID',
             'useGii' => true, //this allows you to generate models and GRUD's automatically
             'modelNamespace' => 'common\models',
