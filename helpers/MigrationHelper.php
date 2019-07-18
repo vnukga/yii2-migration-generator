@@ -15,7 +15,12 @@ namespace vnukga\migrationGenerator\helpers;
 
 class MigrationHelper extends BaseHelper
 {
-    public function createMigrationsFromArray($diffs){
+    /**
+     * Generates migrations for each type of schema's differencies.
+     * @param array $diffs
+     */
+    public function createMigrationsFromArray(array $diffs)
+    {
         foreach ($diffs as $type => $diff){
             switch ($type){
                 case 'new_tables': $this->createNewTablesMigrations($diff);
@@ -31,13 +36,21 @@ class MigrationHelper extends BaseHelper
         }
     }
 
+    /**
+     * Accepts generated migrations.
+     */
     public function acceptMigrations()
     {
         $command = 'yii migrate';
         $this->applyConsoleCommand($command);
     }
 
-    private function createNewColumnsMigratios($tables){
+    /**
+     * Creates migration for new column
+     * @param array $tables
+     */
+    private function createNewColumnsMigratios(array $tables)
+    {
         foreach ($tables as $tableName => $columns) {
             foreach ($columns as $columnName => $params) {
                 $fields = '--fields='.$columnName.$this->getFieldParamsAsString($params);
@@ -47,7 +60,12 @@ class MigrationHelper extends BaseHelper
         }
     }
 
-    private function createNewTablesMigrations($tables){
+    /**
+     * Creates migration for new table
+     * @param array $tables
+     */
+    private function createNewTablesMigrations(array $tables)
+    {
         foreach ($tables as $key => $item)
         {
             $tableName = $key;
@@ -58,7 +76,12 @@ class MigrationHelper extends BaseHelper
         }
     }
 
-    private function createDropColumnsMigratios($tables){
+    /**
+     * Creates migration to drop column
+     * @param array $tables
+     */
+    private function createDropColumnsMigratios(array $tables)
+    {
         foreach ($tables as $tableName => $columns) {
             foreach ($columns as $columnName => $params) {
                 $fields = '--fields='.$columnName.$this->getFieldParamsAsString($params);
@@ -68,7 +91,12 @@ class MigrationHelper extends BaseHelper
         }
     }
 
-    private function createDropTablesMigrations($tables){
+    /**
+     * Creates migration to drop table
+     * @param array $tables
+     */
+    private function createDropTablesMigrations(array $tables)
+    {
         foreach ($tables as $key => $item)
         {
             $tableName = $key;
@@ -79,7 +107,12 @@ class MigrationHelper extends BaseHelper
         }
     }
 
-    private function getFieldsAsString($fieldsArray)
+    /**
+     * Returns string for fields to append to 'yii/migrate' command
+     * @param array $fieldsArray
+     * @return bool|string
+     */
+    private function getFieldsAsString(array $fieldsArray)
     {
         $fields = '--fields=';
         foreach ($fieldsArray as $fieldName => $params)
@@ -96,10 +129,15 @@ class MigrationHelper extends BaseHelper
         return $fields;
     }
 
-    private function getFieldParamsAsString($params){
+    /**
+     * Returns field's parameters as string.
+     * @param array$params
+     * @return string
+     */
+    private function getFieldParamsAsString(array $params)
+    {
         $paramsString = '';
         foreach ($params as $paramName => $param)
-
         {
             if($param != '')
             {

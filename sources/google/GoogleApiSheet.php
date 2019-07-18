@@ -28,7 +28,14 @@ class GoogleApiSheet
 
     public $keyPath;
 
-    public function getPreparedArray($spreadsheetId){
+    /**
+     * Returns array from Google Sheet with $spreadsheetId.
+     * @param string $spreadsheetId
+     * @return array
+     * @throws \Google_Exception
+     */
+    public function getPreparedArray(string $spreadsheetId)
+    {
         $client = $this->getClient();
         $service = new Google_Service_Sheets($client);
         $range = 'DB';
@@ -55,6 +62,12 @@ class GoogleApiSheet
         return $schema;
     }
 
+    /**
+     * Returns key of a value equals to $header.
+     * @param string $header
+     * @param array $values
+     * @return int|string|null
+     */
     private function getKeyForHeader(string $header, array $values)
     {
         foreach ($values as $key => $value){
@@ -65,7 +78,14 @@ class GoogleApiSheet
         return null;
     }
 
-    private function valuesToArray(array $values, array $schema) {
+    /**
+     * Leads values to standart schema
+     * @param array $values
+     * @param array $schema
+     * @return array
+     */
+    private function valuesToArray(array $values, array $schema)
+    {
         $result = [];
 
         for ($i = 1; $i < count($values); $i++){
@@ -90,6 +110,11 @@ class GoogleApiSheet
         return $result;
     }
 
+    /**
+     * Returns Google API's client.
+     * @return Google_Client
+     * @throws \Google_Exception
+     */
     private function getClient()
     {
         $client = new Google_Client();
@@ -103,7 +128,7 @@ class GoogleApiSheet
         // The file token.json stores the user's access and refresh tokens, and is
         // created automatically when the authorization flow completes for the first
         // time.
-        $tokenPath = __DIR__ . '/token.json';
+        $tokenPath = $this->keyPath . '/token.json';
         if (file_exists($tokenPath)) {
             $accessToken = json_decode(file_get_contents($tokenPath), true);
             $client->setAccessToken($accessToken);
